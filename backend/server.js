@@ -18,6 +18,8 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.use("/api/auth", require("./routes/authRoutes"));
+//Register route in server.js
+app.use("/api/test", require("./routes/testRoutes"));
 
 
 app.listen(PORT, () => {
