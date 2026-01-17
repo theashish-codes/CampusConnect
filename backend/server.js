@@ -16,11 +16,12 @@ app.get("/", (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-
+//Register auth route in server.js
 app.use("/api/auth", require("./routes/authRoutes"));
-//Register route in server.js
+//Register test route in server.js
 app.use("/api/test", require("./routes/testRoutes"));
-
+//Register attendance route in server.js
+app.use("/api/attendance", require("./routes/attendenceRoutes"));
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
