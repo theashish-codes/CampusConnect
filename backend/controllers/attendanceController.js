@@ -23,6 +23,7 @@ exports.markAttendance = async (req, res) => {
 };
 
 // GET STUDENT ATTENDANCE
+
 exports.getStudentAttendance = async (req, res) => {
   try {
     const records = await Attendance.find({
@@ -35,80 +36,64 @@ exports.getStudentAttendance = async (req, res) => {
   }
 };
 
-//summary
-exports.getAttendanceSummary = async (req, res) => {
+// summmary 
+exports.getMyAttendanceSummary = async (req, res) => {
   try {
-    const records = await Attendance.find({
-      student: req.user._id,
-    });
+    const studentId = req.user._id;
 
-    const summary = {};
-
-    records.forEach((rec) => {
-      if (!summary[rec.subject]) {
-        summary[rec.subject] = { total: 0, present: 0 };
-      }
-      summary[rec.subject].total += 1;
-      if (rec.status === "present") {
-        summary[rec.subject].present += 1;
-      }
-    });
-
-    const result = Object.keys(summary).map((subject) => {
-      const total = summary[subject].total;
-      const present = summary[subject].present;
-      const percentage = ((present / total) * 100).toFixed(2);
-
-      return {
-        subject,
-        total,
-        present,
-        percentage,
-        eligible: percentage >= 75,
-      };
-    });
-
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-//percentage and eligibility
-
-exports.getAttendancePercentage = async (req, res) => {
-  try {
-    const { studentId, subject } = req.params;
-
-    const records = await Attendance.find({ studentId, subject });
+    const records = await Attendance.find({ student: studentId })
+      .populate("subject", "name");
 
     if (records.length === 0) {
-      return res.status(404).json({
-        message: "No attendance records found"
+      return res.status(200).json({
+        message: "No attendance records found",
+        summary: []
       });
     }
 
-    const totalClasses = records.length;
-    const presentCount = records.filter(
-      r => r.status === "present"
-    ).length;
+    const summaryMap = {};
 
-    const percentage = ((presentCount / totalClasses) * 100).toFixed(2);
+    records.forEach((rec) => {
+      const subjectId = rec.subject._id.toString();
 
-    const isEligible = percentage >= 75;
+      if (!summaryMap[subjectId]) {
+        summaryMap[subjectId] = {
+          subject: rec.subject.name,
+          totalClasses: 0,
+          present: 0
+        };
+      }
 
-    res.json({
+      summaryMap[subjectId].totalClasses += 1;
+
+      if (rec.status === "present") {
+        summaryMap[subjectId].present += 1;
+      }
+    });
+
+    const summary = Object.values(summaryMap).map(item => {
+      const percentage = Math.round(
+        (item.present / item.totalClasses) * 100
+      );
+
+      return {
+        subject: item.subject,
+        totalClasses: item.totalClasses,
+        present: item.present,
+        percentage,
+        eligibleForExam: percentage >= 75
+      };
+    });
+
+    res.status(200).json({
       studentId,
-      subject,
-      totalClasses,
-      presentCount,
-      attendancePercentage: percentage,
-      examEligible: isEligible
+      summary
     });
 
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "Failed to get attendance summary",
+      error: error.message
+    });
   }
 };
-
-

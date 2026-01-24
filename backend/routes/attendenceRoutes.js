@@ -1,8 +1,10 @@
 const express = require("express");
+// const Router = express.Router();
+
 const {
   markAttendance,
   getStudentAttendance,
-  getAttendanceSummary,
+  getMyAttendanceSummary,
   getAttendancePercentage,
 } = require("../controllers/attendanceController");
 
@@ -29,17 +31,17 @@ router.get(
 
 //summary
 router.get(
-  "/summary",
+  "/summary/me",
   protect,
   authorizeRoles("student"),
-  getAttendanceSummary
+  getMyAttendanceSummary
 );
 
-//percentage
-router.get(
-  "/percentage/:studentId/:subject",
-  getAttendancePercentage
-);
+// //percentage
+// router.get(
+//   "/percentage/:studentId/:subject",
+//   getAttendancePercentage
+// );
 
 
 module.exports = router;

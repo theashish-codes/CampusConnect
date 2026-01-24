@@ -23,6 +23,11 @@ app.use("/api/test", require("./routes/testRoutes"));
 //Register attendance route in server.js
 app.use("/api/attendance", require("./routes/attendenceRoutes"));
 
+const subjectRoutes = require("./routes/subjectRoutes");
+
+app.use("/api/subjects", subjectRoutes);
+
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

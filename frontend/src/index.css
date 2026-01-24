@@ -5,4 +5,17 @@
 body {
   background-color: #0f172a;
   color: white;
+  /* @apply bg-slate-900 text-white antialiased; */
+
+}
+
+
+/* Input focus effect */
+input, select {
+  transition: all 0.2s ease;
+}
+
+/* Button smooth hover */
+button {
+  transition: all 0.2s ease;
 }

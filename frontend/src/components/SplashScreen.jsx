@@ -9,16 +9,15 @@ export default function SplashScreen({ onFinish }) {
     return () => clearTimeout(timer);
   }, [onFinish]);
 
-  return (
-    <div className="h-screen w-full flex flex-col items-center justify-center bg-slate-900 text-white">
-      <div className="text-4xl font-bold tracking-wide">
-        Campus<span className="text-blue-500">Connect</span>
-      </div>
-
-      <div className="mt-6 flex items-center gap-2 text-sm text-gray-400">
-        <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-        Initializing system...
-      </div>
+ return (
+  <div className="h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+    <div className="text-5xl font-extrabold tracking-wide animate-fadeIn">
+      Campus<span className="text-blue-500">Connect</span>
     </div>
-  );
-}
+
+    <div className="mt-8 flex items-center gap-3 text-sm text-gray-400">
+      <span className="w-2 h-2 bg-blue-500 rounded-full animate-ping"></span>
+      Initializing system...
+    </div>
+  </div>
+);}

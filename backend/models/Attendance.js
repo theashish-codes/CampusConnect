@@ -9,7 +9,8 @@ const attendanceSchema = new mongoose.Schema(
     },
 
     subject: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref : "Subject",
       required: true,
     },
 
@@ -25,6 +26,7 @@ const attendanceSchema = new mongoose.Schema(
     },
 
     markedBy: {
+  
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
